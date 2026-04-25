@@ -25,10 +25,11 @@ export default function AIMeasurePage() {
   const [loading, setLoading] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [calibrated, setCalibrated] = useState(null);
+  const [calibLoading, setCalibLoading] = useState(true);
   const [form, setForm] = useState({ name: 'Walk-in Customer', phone: '' });
 
   useEffect(() => {
-    api.getCalibration().then(setCalibrated).catch(() => setCalibrated(null));
+    api.getCalibration().then(setCalibrated).catch(() => setCalibrated(null)).finally(() => setCalibLoading(false));
   }, []);
 
   const streamRef = useRef(null);
@@ -106,6 +107,14 @@ export default function AIMeasurePage() {
     setError('');
     setShowAll(false);
   };
+
+  if (calibLoading) {
+    return (
+      <div className="max-w-2xl mx-auto text-center py-16">
+        <div className="animate-spin w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full mx-auto" />
+      </div>
+    );
+  }
 
   if (!calibrated) {
     return (
