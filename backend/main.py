@@ -78,8 +78,11 @@ async def update_size(size_id: int, updates: SizeUpdate, db: aiosqlite.Connectio
 
     set_clause = ", ".join(f"{k} = ?" for k in data)
     values = list(data.values()) + [size_id]
-    await db.execute(f"UPDATE sizes SET {set_clause} WHERE id = ?", values)
-    await db.commit()
+    try:
+        await db.execute(f"UPDATE sizes SET {set_clause} WHERE id = ?", values)
+        await db.commit()
+    except aiosqlite.IntegrityError:
+        raise HTTPException(status_code=400, detail=f"Size name '{data.get('name', '')}' already exists")
 
     cursor = await db.execute("SELECT * FROM sizes WHERE id = ?", (size_id,))
     row = await cursor.fetchone()
