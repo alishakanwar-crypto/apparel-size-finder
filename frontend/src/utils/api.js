@@ -1,0 +1,24 @@
+const BASE = '/api';
+
+async function request(path, options = {}) {
+  const res = await fetch(`${BASE}${path}`, {
+    headers: { 'Content-Type': 'application/json', ...options.headers },
+    ...options,
+  });
+  if (res.status === 204) return null;
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail || 'Request failed');
+  }
+  return res.json();
+}
+
+export const api = {
+  getSizes: () => request('/sizes'),
+  createSize: (data) => request('/sizes', { method: 'POST', body: JSON.stringify(data) }),
+  updateSize: (id, data) => request(`/sizes/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteSize: (id) => request(`/sizes/${id}`, { method: 'DELETE' }),
+  recommend: (data) => request('/recommend', { method: 'POST', body: JSON.stringify(data) }),
+  getCustomers: () => request('/customers'),
+  deleteCustomer: (id) => request(`/customers/${id}`, { method: 'DELETE' }),
+};
