@@ -46,6 +46,21 @@ async def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS calibration (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL DEFAULT 'default',
+                chest_real REAL NOT NULL,
+                shoulder_real REAL NOT NULL,
+                torso_real REAL NOT NULL,
+                shoulder_px REAL,
+                torso_px REAL,
+                chest_px REAL,
+                pixels_per_inch REAL,
+                is_active INTEGER NOT NULL DEFAULT 1,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
         await db.commit()
 
 

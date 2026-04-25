@@ -1,8 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Ruler, Users, Settings, Shirt } from 'lucide-react';
+import { Ruler, Users, Settings, Shirt, Scan, Target } from 'lucide-react';
 
 const links = [
   { to: '/', label: 'Measure', icon: Ruler },
+  { to: '/ai-measure', label: 'AI Detect', icon: Scan },
+  { to: '/calibration', label: 'Calibrate', icon: Target },
   { to: '/customers', label: 'Customers', icon: Users },
   { to: '/sizes', label: 'Size Chart', icon: Settings },
 ];
