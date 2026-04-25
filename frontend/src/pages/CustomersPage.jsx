@@ -21,8 +21,12 @@ export default function CustomersPage() {
 
   const handleDelete = async (id) => {
     if (!confirm('Delete this customer record?')) return;
-    await api.deleteCustomer(id);
-    setCustomers((prev) => prev.filter((c) => c.id !== id));
+    try {
+      await api.deleteCustomer(id);
+      setCustomers((prev) => prev.filter((c) => c.id !== id));
+    } catch {
+      await load();
+    }
   };
 
   return (
