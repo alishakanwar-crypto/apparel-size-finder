@@ -73,9 +73,9 @@ class CustomerRecord(BaseModel):
 
 class CalibrationCreate(BaseModel):
     name: str = Field(default="default", example="Shop Entrance Dummy")
-    chest_real: float = Field(..., ge=0, example=40.0)
-    shoulder_real: float = Field(..., ge=0, example=18.0)
-    torso_real: float = Field(..., ge=0, example=18.0)
+    chest_real: float = Field(..., gt=0, example=40.0)
+    shoulder_real: float = Field(..., gt=0, example=18.0)
+    torso_real: float = Field(..., gt=0, example=18.0)
     image_data: str = Field(..., description="Base64-encoded image of the calibration dummy")
 
 

@@ -54,6 +54,10 @@ export default function AIMeasurePage() {
     setStreaming(false);
   }, []);
 
+  useEffect(() => {
+    return () => stopCamera();
+  }, [stopCamera]);
+
   const capture = useCallback(() => {
     if (!videoRef.current || !canvasRef.current) return;
     const video = videoRef.current;
