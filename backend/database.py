@@ -1,7 +1,8 @@
 import aiosqlite
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "apparel.db")
+_data_dir = "/data" if os.path.isdir("/data") else os.path.dirname(__file__)
+DB_PATH = os.path.join(_data_dir, "apparel.db")
 
 
 async def get_db():
