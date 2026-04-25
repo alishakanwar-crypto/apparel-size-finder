@@ -192,7 +192,10 @@ async def delete_customer(customer_id: int, db: aiosqlite.Connection = Depends(g
 @app.post("/api/calibration", response_model=CalibrationResponse, status_code=201)
 async def create_calibration(cal: CalibrationCreate, db: aiosqlite.Connection = Depends(get_db)):
     """Calibrate using a reference dummy image with known measurements."""
-    image = decode_image(cal.image_data)
+    try:
+        image = decode_image(cal.image_data)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     landmarks = detect_pose(image)
     if not landmarks:
         raise HTTPException(status_code=400, detail="Could not detect pose in calibration image. Ensure the full body is visible.")
@@ -265,7 +268,10 @@ async def ai_measure(payload: AIImageInput, db: aiosqlite.Connection = Depends(g
     cal = dict(cal_row)
 
     # Decode and process image
-    image = decode_image(payload.image_data)
+    try:
+        image = decode_image(payload.image_data)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     landmarks = detect_pose(image)
     if not landmarks:
         raise HTTPException(

@@ -31,24 +31,27 @@ export default function AIMeasurePage() {
     api.getCalibration().then(setCalibrated).catch(() => setCalibrated(null));
   }, []);
 
+  const streamRef = useRef(null);
+
   const startCamera = useCallback(async () => {
     setError('');
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 960 } },
       });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        setStreaming(true);
-      }
+      streamRef.current = stream;
+      setStreaming(true);
     } catch {
       setError('Camera access denied. Please allow camera permissions.');
     }
   }, []);
 
   const stopCamera = useCallback(() => {
-    if (videoRef.current?.srcObject) {
-      videoRef.current.srcObject.getTracks().forEach((t) => t.stop());
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
       videoRef.current.srcObject = null;
     }
     setStreaming(false);
@@ -177,7 +180,7 @@ export default function AIMeasurePage() {
               </div>
             ) : streaming ? (
               <div className="text-center space-y-4">
-                <video ref={videoRef} autoPlay playsInline className="max-h-96 mx-auto rounded-xl border border-gray-100" />
+                <video ref={(el) => { videoRef.current = el; if (el && streamRef.current) el.srcObject = streamRef.current; }} autoPlay playsInline className="max-h-96 mx-auto rounded-xl border border-gray-100" />
                 <button
                   onClick={capture}
                   className="px-8 py-3 bg-red-500 text-white rounded-full font-semibold hover:bg-red-600 transition shadow-lg"

@@ -70,7 +70,10 @@ def decode_image(image_data: str) -> np.ndarray:
         image_data = image_data.split(",", 1)[1]
     img_bytes = base64.b64decode(image_data)
     nparr = np.frombuffer(img_bytes, np.uint8)
-    return cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    if image is None:
+        raise ValueError("Could not decode image. Ensure the image is a valid JPEG or PNG.")
+    return image
 
 
 def detect_pose(image: np.ndarray) -> PoseLandmarks | None:
