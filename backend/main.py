@@ -60,7 +60,7 @@ async def create_size(size: SizeCreate, db: aiosqlite.Connection = Depends(get_d
         )
         await db.commit()
         new_id = cursor.lastrowid
-    except Exception:
+    except aiosqlite.IntegrityError:
         raise HTTPException(status_code=400, detail=f"Size '{size.name}' already exists")
     return {**size.model_dump(), "id": new_id}
 
