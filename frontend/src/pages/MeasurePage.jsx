@@ -50,7 +50,7 @@ export default function MeasurePage() {
         body_length: parseFloat(form.body_length),
         waist: parseFloat(form.waist),
       };
-      if (Object.values(payload).some((v) => v !== null && isNaN(v))) {
+      if (Object.values(payload).some((v) => v !== null && Number.isNaN(v))) {
         throw new Error('Please enter valid numbers for all measurements.');
       }
       const data = await api.recommend(payload);
